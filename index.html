@@ -88,6 +88,7 @@
   <div class="bg"></div>
   <div class="overlay"></div>
 
+  <!-- Header (Admin Link REMOVED) -->
   <header>
     <div class="logo">EXOPLANET ATLAS</div>
     <nav>
@@ -95,10 +96,11 @@
       <a href="#planets" onclick="scrollToSection('planets')">Planets</a>
       <a href="#map-section" onclick="scrollToSection('map-section')">Sky Map</a>
       <a href="#about" onclick="scrollToSection('about')">About</a>
-      <a href="admin.html" style="background:rgba(255,0,170,.2);padding:0.5rem 1rem;border-radius:20px;">Admin</a>
+      <!-- ADMIN LINK REMOVED -->
     </nav>
   </header>
 
+  <!-- Hero -->
   <section class="hero" id="home">
     <h1>EVERY PLANET EVER DISCOVERED</h1>
     <p>Explore over 5,700 confirmed exoplanets + your custom uploads. Real-time. Beautiful.</p>
@@ -111,6 +113,7 @@
     </div>
   </section>
 
+  <!-- Controls -->
   <div class="controls">
     <input type="text" class="search-box" placeholder="Search planet, star, or method..." id="search"/>
     <select id="filter-method">
@@ -127,20 +130,24 @@
     </select>
   </div>
 
+  <!-- Planets Grid -->
   <section id="planets">
     <div class="planet-grid" id="planet-container"></div>
   </section>
 
+  <!-- Sky Map -->
   <section id="map-section">
     <div id="map"></div>
   </section>
 
+  <!-- About -->
   <section id="about">
     <h2>About ExoPlanet Atlas</h2>
-    <p>Real-time data from NASA + your custom planets. Upload via <a href="admin.html">admin.html</a>.</p>
+    <p>Real-time data from NASA + your custom planets. Upload via <code>admin.html</code> (hidden).</p>
     <p>Built with love for space explorers.</p>
   </section>
 
+  <!-- Modal -->
   <div class="modal" id="planet-modal">
     <div class="modal-content">
       <span class="close-modal" onclick="closeModal()">×</span>
@@ -159,10 +166,12 @@
     </div>
   </div>
 
+  <!-- Footer -->
   <footer>
     <p>© 2025 ExoPlanet Atlas | Data from <a href="https://exoplanetarchive.ipac.caltech.edu" target="_blank">NASA</a></p>
   </footer>
 
+  <!-- Scripts -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
     function scrollToSection(id) {
