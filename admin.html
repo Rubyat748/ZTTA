@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ExoPlanet Atlas Admin</title>
+  <title>Admin Panel | ExoPlanet Atlas</title>
 
   <!-- Same Fonts & Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -11,37 +11,48 @@
 
   <style>
     :root{
-      --primary:#00d4ff;--secondary:#ff00aa;--dark:#0a0a1a;--light:#f0f8ff;
-      --glow:0 0 20px rgba(0,212,255,.6);--transition:all .4s cubic-bezier(.25,.8,.25,1);
+      --primary:#00d4ff;--secondary:#ff00aa;--glow:0 0 20px rgba(0,212,255,.6);--transition:all .4s ease;
     }
     *{margin:0;padding:0;box-sizing:border-box;}
-    body{font-family:'Inter',sans-serif;background:#000;color:var(--light);line-height:1.7;}
+    body{font-family:'Inter',sans-serif;background:#000;color:#fff;overflow-x:hidden;}
     .bg{position:fixed;top:0;left:0;width:100%;height:100%;background:url('assets/background.png') center/cover no-repeat;z-index:-2;filter:brightness(.7);}
     .overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,rgba(0,0,50,.8),rgba(10,0,30,.9));z-index:-1;}
 
     /* Login */
-    #login{display:flex;justify-content:center;align-items:center;height:100vh;text-align:center;}
-    #login form{max-width:400px;width:100%;padding:2rem;background:rgba(10,10,40,.8);border-radius:20px;}
-    #login input{padding:1rem;margin:1rem;border:2px solid rgba(0,212,255,.3);border-radius:10px;background:rgba(0,0,0,.5);color:#fff;}
-    #login button{background:var(--primary);color:#fff;border:none;padding:1rem;border-radius:10px;cursor:pointer;}
+    #login{display:flex;justify-content:center;align-items:center;height:100vh;}
+    #login form{max-width:400px;width:100%;padding:2.5rem;background:rgba(10,10,40,.9);border-radius:20px;text-align:center;box-shadow:var(--glow);}
+    #login h2{font-family:'Orbitron',sans-serif;font-size:2.2rem;color:var(--primary);margin-bottom:1rem;}
+    #login input{padding:1rem;margin:0.8rem 0;border:2px solid rgba(0,212,255,.3);border-radius:10px;background:rgba(0,0,0,.5);color:#fff;width:100%;font-size:1rem;}
+    #login button{background:linear-gradient(45deg,var(--primary),var(--secondary));border:none;padding:1rem;border-radius:10px;color:#fff;font-weight:700;cursor:pointer;transition:var(--transition);}
+    #login button:hover{box-shadow:var(--glow);transform:scale(1.02);}
 
     /* Admin Dashboard */
-    #admin{display:none;padding:2rem;max-width:800px;margin:0 auto;}
-    h1{font-family:'Orbitron',sans-serif;font-size:3rem;color:var(--primary);text-align:center;margin-bottom:2rem;}
-    form{display:grid;gap:1rem;}
-    input,select,textarea{padding:1rem;border:2px solid rgba(0,212,255,.3);border-radius:10px;background:rgba(0,0,0,.5);color:#fff;}
+    #admin{display:none;padding:3rem 1rem;max-width:900px;margin:0 auto;}
+    h1{font-family:'Orbitron',sans-serif;font-size:2.8rem;color:var(--primary);text-align:center;margin-bottom:1.5rem;text-shadow:var(--glow);}
+    .back-btn{display:inline-block;margin-bottom:2rem;background:var(--secondary);color:#fff;padding:0.8rem 1.5rem;border-radius:10px;text-decoration:none;transition:var(--transition);}
+    .back-btn:hover{box-shadow:var(--glow);}
+
+    form{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem;background:rgba(10,10,40,.7);padding:2rem;border-radius:15px;border:1px solid rgba(0,212,255,.2);}
+    input,select{padding:1rem;border:2px solid rgba(0,212,255,.3);border-radius:10px;background:rgba(0,0,0,.5);color:#fff;font-size:1rem;}
     .file-input{display:none;}
-    .file-label{display:inline-block;padding:1rem;background:var(--secondary);color:#fff;border-radius:10px;cursor:pointer;}
-    button{background:linear-gradient(45deg,var(--primary),var(--secondary));color:#fff;border:none;padding:1rem;border-radius:10px;cursor:pointer;transition:var(--transition);}
-    button:hover{box-shadow:var(--glow);}
+    .file-label{display:inline-block;padding:1rem 1.5rem;background:var(--secondary);color:#fff;border-radius:10px;cursor:pointer;text-align:center;}
+    .file-label:hover{box-shadow:var(--glow);}
+ Lennox
+    button[type="submit"]{grid-column:1/-1;background:linear-gradient(45deg,var(--primary),var(--secondary));border:none;padding:1.2rem;border-radius:10px;color:#fff;font-weight:700;cursor:pointer;transition:var(--transition);}
+    button[type="submit"]:hover{box-shadow:0 0 30px rgba(0,212,255,.8);}
+
+    #img-preview{max-width:200px;height:auto;margin-top:1rem;border-radius:10px;display:none;}
 
     /* Uploaded List */
     #uploaded-list{margin-top:3rem;}
-    .uploaded-planet{background:rgba(10,10,40,.7);padding:1rem;border-radius:10px;margin:1rem 0;border-left:4px solid var(--primary);}
-    .delete-btn{background:red;float:right;padding:0.5rem;border-radius:5px;font-size:0.8rem;}
+    .uploaded-planet{background:rgba(10,10,40,.8);padding:1.2rem;border-radius:12px;margin:1rem 0;border-left:5px solid var(--primary);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
+    .uploaded-planet img{width:60px;height:60px;object-fit:cover;border-radius:8px;}
+    .delete-btn{background:#ff3366;color:#fff;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;font-size:0.9rem;}
+    .delete-btn:hover{background:#cc0022;}
 
-    /* Responsive */
-    @media(max-width:768px){#admin form{grid-template-columns:1fr;}}
+    @media(max-width:768px){
+      form{grid-template-columns:1fr;}
+    }
   </style>
 </head>
 <body>
@@ -52,23 +63,21 @@
   <!-- Login -->
   <div id="login">
     <form onsubmit="login(event)">
-      <h2>Admin Login</h2>
-      <input type="password" id="password" placeholder="Enter password (default: admin123)" required>
-      <button type="submit">Login</button>
+      <h2>ADMIN LOGIN</h2>
+      <input type="password" id="password" placeholder="Enter password" required>
+      <button type="submit">LOGIN</button>
     </form>
   </div>
 
   <!-- Admin Dashboard -->
   <div id="admin">
-    <h1><i class="fas fa-cog"></i> ExoPlanet Admin</h1>
-    <a href="index.html" style="display:inline-block;margin-bottom:2rem;background:var(--secondary);color:#fff;padding:1rem;border-radius:10px;text-decoration:none;">← Back to Site</a>
+    <a href="index.html" class="back-btn">Back to Atlas</a>
+    <h1>ADD CUSTOM PLANET</h1>
 
-    <!-- Upload Form -->
     <form onsubmit="uploadPlanet(event)">
-      <h3>Add Custom Planet</h3>
-      <input type="text" id="pl_name" placeholder="Planet Name (e.g., MyPlanet-1)" required>
-      <input type="text" id="hostname" placeholder="Host Star (e.g., MyStar)" required>
-      <input type="number" id="disc_year" placeholder="Discovery Year (e.g., 2025)" required>
+      <input type="text" id="pl_name" placeholder="Planet Name (e.g. Grok-1b)" required>
+      <input type="text" id="hostname" placeholder="Host Star (e.g. Proxima)" required>
+      <input type="number" id="disc_year" placeholder="Discovery Year (e.g. 2025)" required>
       <select id="discoverymethod" required>
         <option value="">Discovery Method</option>
         <option>Transit</option>
@@ -76,21 +85,22 @@
         <option>Imaging</option>
         <option>Microlensing</option>
       </select>
-      <input type="number" id="pl_rade" placeholder="Radius (Earth radii, e.g., 1.2)" step="0.1">
-      <input type="number" id="pl_masse" placeholder="Mass (Earth masses, e.g., 1.5)" step="0.1">
-      <input type="number" id="pl_eqt" placeholder="Equilibrium Temp (K, e.g., 280)" step="1">
-      <input type="number" id="st_dist" placeholder="Distance (light-years, e.g., 50)" step="0.1">
+      <input type="number" id="pl_rade" placeholder="Radius (Earth = 1)" step="0.01">
+      <input type="number" id="pl_masse" placeholder="Mass (Earth = 1)" step="0.01">
+      <input type="number" id="pl_eqt" placeholder="Temperature (K)" step="1">
+      <input type="number" id="st_dist" placeholder="Distance (light-years)" step="0.1">
       <select id="pl_habitable">
         <option value="0">Not Habitable</option>
         <option value="1">Habitable Zone</option>
       </select>
+
       <input type="file" id="customImg" class="file-input" accept="image/*">
-      <label for="customImg" class="file-label"><i class="fas fa-upload"></i> Upload Planet Image</label>
-      <img id="img-preview" style="max-width:200px;height:auto;display:none;margin-top:1rem;">
-      <button type="submit">Add Planet</button>
+      <label for="customImg" class="file-label">Upload Image</label>
+      <img id="img-preview" alt="Preview">
+
+      <button type="submit">ADD PLANET TO ATLAS</button>
     </form>
 
-    <!-- Uploaded Planets List -->
     <div id="uploaded-list">
       <h3>Custom Planets (<span id="count">0</span>)</h3>
       <div id="list"></div>
@@ -98,11 +108,12 @@
   </div>
 
   <script>
-    const ADMIN_PASSWORD = 'admin123';  // Change this for security!
+    const ADMIN_PASSWORD = 'admin123';  // CHANGE THIS FOR SECURITY!
 
     function login(e) {
       e.preventDefault();
-      if (document.getElementById('password').value === ADMIN_PASSWORD) {
+      const input = document.getElementById('password').value;
+      if (input === ADMIN_PASSWORD) {
         document.getElementById('login').style.display = 'none';
         document.getElementById('admin').style.display = 'block';
         loadUploaded();
@@ -111,21 +122,23 @@
       }
     }
 
-    // Image preview
+    // Image Preview
     document.getElementById('customImg').addEventListener('change', (e) => {
       const file = e.target.files[0];
-      if (file && file.size < 1024 * 1024) {  // 1MB limit
+      if (file && file.size < 1.5 * 1024 * 1024) {  // <1.5MB
         const reader = new FileReader();
         reader.onload = (ev) => {
-          document.getElementById('img-preview').src = ev.target.result;
-          document.getElementById('img-preview').style.display = 'block';
+          const preview = document.getElementById('img-preview');
+          preview.src = ev.target.result;
+          preview.style.display = 'block';
         };
         reader.readAsDataURL(file);
       } else {
-        alert('Image too large (max 1MB)');
+        alert('Image too large! Max 1.5MB');
       }
     });
 
+    // Upload Planet
     function uploadPlanet(e) {
       e.preventDefault();
       const planet = {
@@ -142,21 +155,25 @@
       };
 
       let customs = JSON.parse(localStorage.getItem('customPlanets') || '[]');
-      customs.push(planet);
+      customs.unshift(planet);  // Newest first
       localStorage.setItem('customPlanets', JSON.stringify(customs));
+
       alert('Planet added! Refresh index.html to see it.');
       e.target.reset();
       document.getElementById('img-preview').style.display = 'none';
       loadUploaded();
     }
 
+    // Load & Display Uploaded Planets
     function loadUploaded() {
       const customs = JSON.parse(localStorage.getItem('customPlanets') || '[]');
       document.getElementById('count').textContent = customs.length;
       document.getElementById('list').innerHTML = customs.map((p, i) => `
         <div class="uploaded-planet">
-          <strong>${p.pl_name}</strong> (${p.hostname}) - ${p.disc_year}<br>
-          ${p.customImg ? '<img src="' + p.customImg + '" style="width:50px;height:50px;object-fit:cover;">' : 'No Image'}
+          <div>
+            <strong>${p.pl_name}</strong> • ${p.hostname} • ${p.disc_year}
+            ${p.customImg ? `<img src="${p.customImg}" alt="">` : ''}
+          </div>
           <button class="delete-btn" onclick="deletePlanet(${i})">Delete</button>
         </div>
       `).join('');
