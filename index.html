@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ExoPlanet Atlas | Every Planet Ever Discovered</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+  <style>
+    :root{
+      --primary:#00d4ff;--secondary:#ff00aa;--dark:#0a0a1a;--light:#f0f8ff;
+      --glow:0 0 20px rgba(0,212,255,.6);--transition:all .4s cubic-bezier(.25,.8,.25,1);
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Inter',sans-serif;background:#000;color:var(--light);overflow-x:hidden;line-height:1.7;}
+    .bg{position:fixed;top:0;left:0;width:100%;height:100%;background:url('assets/background.png') center/cover no-repeat;z-index:-2;filter:brightness(.7);}
+    .overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,rgba(0,0,50,.8),rgba(10,0,30,.9));z-index:-1;}
+
+    /* Header */
+    header{position:fixed;top:0;left:0;right:0;padding:1.5rem 5%;display:flex;justify-content:space-between;align-items:center;z-index:1000;backdrop-filter:blur(10px);background:rgba(0,0,0,.3);border-bottom:1px solid rgba(0,212,255,.2);}
+    .logo{font-family:'Orbitron',sans-serif;font-size:2.2rem;font-weight:900;background:linear-gradient(90deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:2px;}
+    nav a{color:#fff;margin:0 1.2rem;font-weight:600;text-decoration:none;font-size:1.1rem;transition:var(--transition);position:relative;}
+    nav a::after{content:'';position:absolute;width:0;height:2px;bottom:-6px;left:0;background:var(--primary);transition:width .3s;}
+    nav a:hover::after{width:100%;}nav a:hover{color:var(--primary);text-shadow:var(--glow);}
+
+    /* Hero */
+    .hero{height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:0 5%;position:relative;}
+    .hero h1{font-family:'Orbitron',sans-serif;font-size:6rem;font-weight:900;background:linear-gradient(120deg,#00d4ff,#ff00aa,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 0 40px rgba(0,212,255,.5);margin-bottom:1.5rem;animation:float 6s ease-in-out infinite;}
+    .hero p{font-size:1.6rem;max-width:800px;margin:1.5rem 0 3rem;color:#ccc;}
+    .btn{padding:1rem 3rem;font-size:1.3rem;font-weight:700;color:#fff;background:linear-gradient(45deg,var(--primary),var(--secondary));border:none;border-radius:50px;cursor:pointer;box-shadow:var(--glow);transition:var(--transition);animation:pulse 2s infinite;}
+    .btn:hover{transform:translateY(-5px);box-shadow:0 0 30px rgba(0,212,255,.8);}
+
+    /* Stats */
+    .stats{display:flex;justify-content:center;gap:4rem;margin:4rem 0;flex-wrap:wrap;}
+    .stat{text-align:center;}
+    .stat h3{font-size:3.5rem;font-weight:900;color:var(--primary);text-shadow:var(--glow);}
+    .stat p{font-size:1.2rem;color:#aaa;}
+
+    /* Controls */
+    .controls{max-width:1200px;margin:2rem auto;padding:0 5%;display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;}
+    .search-box{padding:1rem 1.5rem;width:350px;border:2px solid rgba(0,212,255,.3);border-radius:50px;background:rgba(0,0,0,.4);color:#fff;font-size:1.1rem;outline:none;transition:var(--transition);}
+    .search-box:focus{border-color:var(--primary);box-shadow:var(--glow);}
+    select{padding:1rem 1.5rem;border:2px solid rgba(0,212,255,.3);border-radius:50px;background:rgba(0,0,0,.4);color:#fff;font-size:1rem;outline:none;}
+
+    /* Planet Grid */
+    .planet-grid{max-width:1400px;margin:3rem auto;padding:0 5%;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:2rem;}
+    .planet-card{background:rgba(10,10,40,.7);border-radius:20px;overflow:hidden;backdrop-filter:blur(10px);border:1px solid rgba(0,212,255,.2);transition:var(--transition);cursor:pointer;position:relative;}
+    .planet-card:hover{transform:translateY(-15px) scale(1.03);box-shadow:0 20px 40px rgba(0,212,255,.3);border-color:var(--primary);}
+    .planet-img{height:200px;background:linear-gradient(45deg,#1a1a2e,#16213e);display:flex;align-items:center;justify-content:center;font-size:4rem;color:var(--primary);}
+    .planet-info{padding:1.5rem;}
+    .planet-name{font-size:1.5rem;font-weight:700;color:var(--primary);margin-bottom:.5rem;}
+    .planet-detail{font-size:.95rem;color:#ccc;margin:.4rem 0;}
+    .planet-detail i{color:var(--secondary);margin-right:.5rem;}
+
+    /* Sections */
+    section{padding:6rem 5%;min-height:80vh;}
+    #planets,#about,#map-section{background:rgba(0,0,0,.3);border-radius:20px;margin:2rem 5%;}
+
+    /* About */
+    #about h2{font-family:'Orbitron',sans-serif;font-size:3rem;color:var(--primary);margin-bottom:1.5rem;}
+    #about p{font-size:1.2rem;max-width:900px;line-height:1.8;margin-bottom:1rem;}
+
+    /* Map */
+    #map{height:600px;border-radius:20px;margin:4rem 5%;box-shadow:0 0 30px rgba(0,212,255,.2);}
+
+    /* Modal */
+    .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.9);justify-content:center;align-items:center;z-index:2000;padding:2rem;overflow-y:auto;}
+    .modal.active{display:flex;}
+    .modal-content{background:rgba(10,10,40,.95);border-radius:20px;max-width:900px;width:100%;padding:2rem;position:relative;box-shadow:0 0 40px rgba(0,212,255,.4);}
+    .close-modal{position:absolute;top:1rem;right:1.5rem;font-size:2rem;color:#fff;cursor:pointer;transition:var(--transition);}
+    .close-modal:hover{color:var(--primary);}
+    .modal h2{font-size:2.5rem;color:var(--primary);margin-bottom:1rem;}
+    .modal p{font-size:1.1rem;line-height:1.8;margin:1rem 0;}
+    .modal .detail-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-top:1.5rem;}
+    .modal .detail-item{background:rgba(0,212,255,.1);padding:1rem;border-radius:12px;}
+    .modal .detail-label{font-weight:600;color:var(--secondary);}
+    .modal .detail-value{color:#fff;}
+
+    /* Footer */
+    footer{text-align:center;padding:3rem;color:#666;font-size:.9rem;}
+    footer a{color:var(--primary);text-decoration:none;}
+
+    /* Animations */
+    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}
+    @keyframes pulse{0%,100%{box-shadow:0 0 20px rgba(0,212,255,.6)}50%{box-shadow:0 0 35px rgba(0,212,255,.9)}}
+
+    /* Responsive */
+    @media(max-width:768px){
+      .hero h1{font-size:3.5rem;}.hero p{font-size:1.2rem;}.stats{gap:2rem;}.stat h3{font-size:2.5rem;}.search-box{width:100%;}
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg"></div>
+  <div class="overlay"></div>
+
+  <!-- Header -->
+  <header>
+    <div class="logo">EXOPLANET ATLAS</div>
+    <nav>
+      <a href="#home" onclick="scrollToSection('home')">Home</a>
+      <a href="#planets" onclick="scrollToSection('planets')">Planets</a>
+      <a href="#map-section" onclick="scrollToSection('map-section')">Sky Map</a>
+      <a href="#about" onclick="scrollToSection('about')">About</a>
+    </nav>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero" id="home">
+    <h1>EVERY PLANET EVER DISCOVERED</h1>
+    <p>Explore over 5,700 confirmed exoplanets from NASA, ESA, and global telescopes. Interactive. Real-time. Beautiful.</p>
+    <button class="btn" onclick="scrollToSection('planets')">EXPLORE NOW</button>
+
+    <div class="stats">
+      <div class="stat"><h3 id="total-planets">5,700+</h3><p>Confirmed Exoplanets</p></div>
+      <div class="stat"><h3 id="habitable">200+</h3><p>Potentially Habitable</p></div>
+      <div class="stat"><h3 id="systems">4,200+</h3><p>Planetary Systems</p></div>
+    </div>
+  </section>
+
+  <!-- Controls -->
+  <div class="controls">
+    <input type="text" class="search-box" placeholder="Search planet, star, or method..." id="search"/>
+    <select id="filter-method">
+      <option value="">All Discovery Methods</option>
+      <option>Transit</option>
+      <option>Radial Velocity</option>
+      <option>Imaging</option>
+      <option>Microlensing</option>
+    </select>
+    <select id="filter-habitable">
+      <option value="">All Habitability</option>
+      <option>Habitable Zone</option>
+      <option>Earth-like</option>
+    </select>
+  </div>
+
+  <!-- Planets Grid -->
+  <section id="planets">
+    <div class="planet-grid" id="planet-container"></div>
+  </section>
+
+  <!-- Sky Map -->
+  <section id="map-section">
+    <div id="map"></div>
+  </section>
+
+  <!-- About -->
+  <section id="about">
+    <h2>About ExoPlanet Atlas</h2>
+    <p>This portal aggregates <strong>real-time data</strong> from the <strong>NASA Exoplanet Archive</strong> using their public TAP service. Every planet you see is a confirmed detection by ground-based observatories, space telescopes (Kepler, TESS, JWST, etc.), or microlensing surveys.</p>
+    <p>We provide:</p>
+    <ul style="margin-left:2rem;font-size:1.1rem;">
+      <li>Live search & filtering</li>
+      <li>Clickable planet cards with detailed modal pop-ups</li>
+      <li>An interactive sky map showing celestial coordinates</li>
+      <li>Statistics on total planets, habitable zones, and systems</li>
+    </ul>
+    <p style="margin-top:1.5rem;">All visual assets are open-source; the background image you supplied (<code>assets/background.png</code>) powers the cosmic atmosphere.</p>
+    <p>Data is fetched <strong>live</strong> from NASA – no static lists. The site works offline with a graceful fallback to demo planets.</p>
+    <p>Built with love for space explorers, astronomers, and dreamers.</p>
+  </section>
+
+  <!-- Modal -->
+  <div class="modal" id="planet-modal">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closeModal()">×</span>
+      <h2 id="modal-name"></h2>
+      <p><strong>Host Star:</strong> <span id="modal-host"></span></p>
+      <p><strong>Discovery Year:</strong> <span id="modal-year"></span></p>
+      <p><strong>Method:</strong> <span id="modal-method"></span></p>
+      <p><strong>Distance:</strong> <span id="modal-dist"></span> light-years</p>
+      <div class="detail-grid">
+        <div class="detail-item"><div class="detail-label">Radius</div><div class="detail-value" id="modal-radius">—</div></div>
+        <div class="detail-item"><div class="detail-label">Mass</div><div class="detail-value" id="modal-mass">—</div></div>
+        <div class="detail-item"><div class="detail-label">Equilibrium Temp</div><div class="detail-value" id="modal-temp">—</div></div>
+        <div class="detail-item"><div class="detail-label">Habitable?</div><div class="detail-value" id="modal-hab">—</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 ExoPlanet Atlas | Data from <a href="https://exoplanetarchive.ipac.caltech.edu" target="_blank">NASA Exoplanet Archive</a></p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    // Smooth scroll
+    function scrollToSection(id) {
+      document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Modal
+    const modal = document.getElementById('planet-modal');
+    function openModal(planet) {
+      document.getElementById('modal-name').textContent = planet.pl_name;
+      document.getElementById('modal-host').textContent = planet.hostname;
+      document.getElementById('modal-year').textContent = planet.disc_year || 'Unknown';
+      document.getElementById('modal-method').textContent = planet.discoverymethod || 'Unknown';
+      document.getElementById('modal-dist').textContent = planet.st_dist ? planet.st_dist.toFixed(1) : 'Unknown';
+
+      document.getElementById('modal-radius').textContent = planet.pl_rade ? `${planet.pl_rade.toFixed(2)} Earth radii` : '—';
+      document.getElementById('modal-mass').textContent = planet.pl_masse ? `${planet.pl_masse.toFixed(2)} Earth masses` : '—';
+      document.getElementById('modal-temp').textContent = planet.pl_eqt ? `${planet.pl_eqt} K` : '—';
+      document.getElementById('modal-hab').textContent = planet.pl_habitable ? 'Yes' : 'No';
+
+      modal.classList.add('active');
+    }
+    function closeModal() {
+      modal.classList.remove('active');
+    }
+    window.onclick = (e) => { if (e.target === modal) closeModal(); }
+
+    // Fetch planets
+    let allPlanets = [];
+    async function loadPlanets() {
+      try {
+        const res = await fetch('https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+pl_name,hostname,disc_year,discoverymethod,pl_rade,pl_masse,pl_eqt,st_dist,pl_habitable,ra,dec&format=json&where=pl_pubdate>=%272000-01-01%27');
+        allPlanets = await res.json();
+      } catch {
+        allPlanets = getDemoData();
+      }
+      displayPlanets(allPlanets);
+      updateStats(allPlanets);
+      initMap(allPlanets);
+    }
+
+    function getDemoData() {
+      return [
+        { pl_name: "Kepler-452b", hostname: "Kepler-452", disc_year: 2015, discoverymethod: "Transit", pl_rade: 1.6, pl_eqt: 265, pl_habitable: 1, st_dist: 1800, ra: 290.67, dec: 44.28 },
+        { pl_name: "TRAPPIST-1d", hostname: "TRAPPIST-1", disc_year: 2016, discoverymethod: "Transit", pl_rade: 0.77, pl_eqt: 288, pl_habitable: 1, st_dist: 39.6, ra: 346.62, dec: -5.04 },
+        { pl_name: "Proxima Centauri b", hostname: "Proxima Centauri", disc_year: 2016, discoverymethod: "Radial Velocity", pl_rade: 1.17, pl_eqt: 234, pl_habitable: 1, st_dist: 4.24, ra: 217.43, dec: -62.68 },
+        { pl_name: "TOI-700 d", hostname: "TOI-700", disc_year: 2020, discoverymethod: "Transit", pl_rade: 1.14, pl_eqt: 269, pl_habitable: 1, st_dist: 101.5, ra: 97.67, dec: -38.54 }
+      ];
+    }
+
+    function displayPlanets(planets) {
+      const container = document.getElementById('planet-container');
+      container.innerHTML = planets.map(p => `
+        <div class="planet-card" onclick="openModal(${JSON.stringify(p).replace(/"/g, '&quot;')})">
+          <div class="planet-img"><i class="fas ${p.pl_habitable ? 'fa-globe' : 'fa-circle'}"></i></div>
+          <div class="planet-info">
+            <div class="planet-name">${p.pl_name}</div>
+            <div class="planet-detail"><i class="fas fa-star"></i> ${p.hostname}</div>
+            <div class="planet-detail"><i class="fas fa-calendar"></i> ${p.disc_year || 'Unknown'}</div>
+            <div class="planet-detail"><i class="fas fa-satellite"></i> ${p.discoverymethod || 'Unknown'}</div>
+            ${p.pl_habitable ? `<div class="planet-detail" style="color:#0f0"><i class="fas fa-heart"></i> Habitable Zone</div>` : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function updateStats(planets) {
+      const total = planets.length;
+      const habitable = planets.filter(p => p.pl_habitable).length;
+      const systems = new Set(planets.map(p => p.hostname)).size;
+      document.getElementById('total-planets').textContent = total.toLocaleString() + '+';
+      document.getElementById('habitable').textContent = habitable + '+';
+      document.getElementById('systems').textContent = systems + '+';
+    }
+
+    function initMap(planets) {
+      const map = L.map('map').setView([20, 0], 2);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+      planets.forEach(p => {
+        if (p.ra && p.dec) {
+          L.circleMarker([p.dec, p.ra], {
+            radius: p.pl_rade ? Math.max(4, p.pl_rade * 2) : 6,
+            color: p.pl_habitable ? '#0f0' : '#00d4ff',
+            fillOpacity: 0.7
+          }).addTo(map).bindPopup(`<b>${p.pl_name}</b><br>${p.hostname}<br>${p.discoverymethod}`);
+        }
+      });
+    }
+
+    // Search & Filter
+    document.getElementById('search').addEventListener('input', filterPlanets);
+    document.getElementById('filter-method').addEventListener('change', filterPlanets);
+    document.getElementById('filter-habitable').addEventListener('change', filterPlanets);
+
+    function filterPlanets() {
+      const query = document.getElementById('search').value.toLowerCase();
+      const method = document.getElementById('filter-method').value;
+      const hab = document.getElementById('filter-habitable').value;
+
+      const filtered = allPlanets.filter(p => {
+        const matchesSearch = p.pl_name.toLowerCase().includes(query) || (p.hostname && p.hostname.toLowerCase().includes(query));
+        const matchesMethod = !method || p.discoverymethod === method;
+        const matchesHab = !hab || (hab === 'Habitable Zone' && p.pl_habitable) || (hab === 'Earth-like' && p.pl_rade && p.pl_rade <= 1.5);
+        return matchesSearch && matchesMethod && matchesHab;
+      });
+
+      displayPlanets(filtered);
+    }
+
+    // Load on start
+    window.onload = loadPlanets;
+  </script>
+</body>
+</html>
