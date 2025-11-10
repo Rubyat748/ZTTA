@@ -9,83 +9,75 @@
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
   <style>
     :root{
-      --primary:#00d4ff;--secondary:#ff00aa;--dark:#0a0a1a;--light:#f0f8ff;
-      --glow:0 0 20px rgba(0,212,255,.6);--transition:all .4s ease;
+      --primary:#00d4ff; --secondary:#ff00aa; --dark:#0a0a1a; --light:#f0f8ff;
+      --glow:0 0 20px rgba(0,212,255,.6); --transition:all .35s cubic-bezier(.2,.9,.2,1);
     }
     *{margin:0;padding:0;box-sizing:border-box;}
-    body{font-family:'Inter',sans-serif;background:#000;color:var(--light);overflow-x:hidden;line-height:1.7;}
-    .bg{position:fixed;top:0;left:0;width:100%;height:100%;background:url('assets/background.png') center/cover no-repeat;z-index:-2;filter:brightness(.7);}
-    .overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,rgba(0,0,50,.8),rgba(10,0,30,.9));z-index:-1;}
+    html,body{height:100%}
+    body{font-family:'Inter',sans-serif;background:#000;color:var(--light);overflow-x:hidden;line-height:1.6;-webkit-font-smoothing:antialiased}
+    .bg{position:fixed;inset:0;background:url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=2112&q=80') center/cover no-repeat;z-index:-2;filter:brightness(.7);animation:pan 40s linear infinite alternate}
+    .overlay{position:fixed;inset:0;background:linear-gradient(135deg,rgba(0,0,50,.8),rgba(10,0,30,.9));z-index:-1}
 
-    header{position:fixed;top:0;left:0;right:0;padding:1rem 5%;display:flex;justify-content:space-between;align-items:center;z-index:1000;backdrop-filter:blur(10px);background:rgba(0,0,0,.3);border-bottom:1px solid rgba(0,212,255,.2);}
-    .logo{font-family:'Orbitron',sans-serif;font-size:1.8rem;font-weight:900;background:linear-gradient(90deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-    .time{font-size:0.9rem;color:#aaa;}
+    header{position:fixed;top:0;left:0;right:0;padding:.9rem 4%;display:flex;justify-content:space-between;align-items:center;z-index:1000;backdrop-filter:blur(8px);background:linear-gradient(180deg,rgba(0,0,0,.28),rgba(0,0,0,.15));border-bottom:1px solid rgba(0,212,255,.06)}
+    .logo{font-family:'Orbitron',sans-serif;font-size:1.5rem;font-weight:900;background:linear-gradient(90deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    nav{display:flex;gap:1rem;align-items:center}
+    nav a{color:#fff;text-decoration:none;font-weight:600;padding:6px 10px;border-radius:8px;transition:var(--transition)}
+    nav a:hover{color:var(--primary);text-shadow:var(--glow);background:rgba(255,255,255,0.02)}
 
-    nav a{color:#fff;margin:0 .8rem;font-weight:600;text-decoration:none;font-size:1rem;transition:var(--transition);position:relative;}
-    nav a::after{content:'';position:absolute;width:0;height:2px;bottom:-6px;left:0;background:var(--primary);transition:width .3s;}
-    nav a:hover::after{width:100%;}nav a:hover{color:var(--primary);text-shadow:var(--glow);}
+    .hero{height:88vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:0 4%;position:relative;overflow:hidden}
+    .hero::before{content:'';position:absolute;top:0;left:0;width:140%;height:140%;background-image:radial-gradient(circle at 20% 20%, rgba(0,212,255,.06), transparent 6%, transparent 100%);transform:translateZ(0);z-index:-1}
+    .hero h1{font-family:'Orbitron',sans-serif;font-size:3.6rem;font-weight:900;background:linear-gradient(120deg,#00d4ff,#ff00aa,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 0 40px rgba(0,212,255,.25);margin-bottom:.6rem;animation:float 6s ease-in-out infinite}
+    .hero p{font-size:1.05rem;max-width:860px;margin:.6rem 0 1.4rem;color:#cfd8e6}
+    .btn{padding:.85rem 2.2rem;border-radius:999px;border:none;cursor:pointer;font-weight:700;color:#fff;background:linear-gradient(45deg,var(--primary),var(--secondary));box-shadow:var(--glow);transition:var(--transition)}
+    .btn:hover{transform:translateY(-6px);box-shadow:0 0 30px rgba(0,212,255,.85)}
 
-    .hero{height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:0 5%;position:relative;overflow:hidden;}
-    .hero::before{
-      content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:url('https://stsci-opo.org/STScI-01J0W0W0W0W0W0W0W0W0W0W0W0.jpg') center/cover no-repeat;z-index:-1;filter:brightness(0.5);
-    }
-    .hero h1{font-family:'Orbitron',sans-serif;font-size:4.5rem;font-weight:900;background:linear-gradient(120deg,#00d4ff,#ff00aa,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 0 40px rgba(0,212,255,.5);margin-bottom:1rem;animation:float 6s ease-in-out infinite;}
-    .hero p{font-size:1.3rem;max-width:800px;margin:1rem 0 2rem;color:#ccc;}
-    .btn{padding:.9rem 2.5rem;font-size:1.2rem;font-weight:700;color:#fff;background:linear-gradient(45deg,var(--primary),var(--secondary));border:none;border-radius:50px;cursor:pointer;box-shadow:var(--glow);transition:var(--transition);}
-    .btn:hover{transform:translateY(-5px);box-shadow:0 0 30px rgba(0,212,255,.8);}
+    .stats{display:flex;justify-content:center;gap:2rem;margin:2rem 0;flex-wrap:wrap}
+    .stat{text-align:center}
+    .stat h3{font-size:2.2rem;font-weight:900;color:var(--primary);text-shadow:var(--glow)}
+    .stat p{font-size:.95rem;color:#b9c6da}
 
-    .stats{display:flex;justify-content:center;gap:2.5rem;margin:2.5rem 0;flex-wrap:wrap;}
-    .stat{text-align:center;}
-    .stat h3{font-size:2.8rem;font-weight:900;color:var(--primary);text-shadow:var(--glow);}
-    .stat p{font-size:1rem;color:#aaa;}
+    .controls{max-width:1200px;margin:1rem auto;padding:0 4%;display:flex;gap:.6rem;flex-wrap:wrap;justify-content:center;align-items:center}
+    .search-box,.controls select,.export-btn,.load-btn{padding:.75rem 1rem;width:100%;max-width:320px;border-radius:40px;background:linear-gradient(0deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));color:#fff;font-size:.98rem;border:2px solid rgba(0,212,255,0.06);outline:none;transition:var(--transition)}
+    .search-box:focus,.controls select:focus{box-shadow:var(--glow);border-color:var(--primary)}
+    .export-btn{background:linear-gradient(45deg,#ff00aa,#7c3aed);font-weight:600}
+    .load-btn{background:linear-gradient(45deg,#00ff88,#00d4ff)}
 
-    .controls{max-width:1200px;margin:1.5rem auto;padding:0 5%;display:flex;gap:.8rem;flex-wrap:wrap;justify-content:center;align-items:center;}
-    .search-box,.controls select,.export-btn,.load-btn{padding:.8rem 1.2rem;width:100%;max-width:320px;border:2px solid rgba(0,212,255,.3);border-radius:50px;background:rgba(0,0,0,.4);color:#fff;font-size:1rem;outline:none;transition:var(--transition);cursor:pointer;}
-    .search-box:focus,.controls select:focus,.export-btn:hover,.load-btn:hover{border-color:var(--primary);box-shadow:var(--glow);}
-    .export-btn{background:linear-gradient(45deg,#ff00aa,#7c3aed);font-weight:600;}
-    .load-btn{background:linear-gradient(45deg,#00ff88,#00d4ff);margin-top:1rem;}
+    .planet-grid{max-width:1400px;margin:2rem auto;padding:0 4%;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.25rem}
+    .planet-card{background:linear-gradient(180deg, rgba(10,10,30,0.7), rgba(10,10,20,0.55));border-radius:14px;overflow:hidden;backdrop-filter:blur(8px);border:1px solid rgba(0,212,255,.05);transition:var(--transition);cursor:pointer;display:flex;flex-direction:column;height:100%;min-height:220px;position:relative;opacity:0;transform:translateY(24px)}
+    .planet-card.visible{opacity:1;transform:translateY(0)}
+    .planet-card:hover{transform:translateY(-6px) scale(1.02);box-shadow:0 20px 40px rgba(0,212,255,.12);border-color:rgba(0,212,255,.2)}
+    .planet-img{flex:1;background:#0e0e14;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+    .planet-img img{width:100%;height:100%;object-fit:cover;display:block}
+    .jwst-badge,.web-badge{position:absolute;top:10px;padding:5px 8px;font-size:.65rem;border-radius:8px;font-weight:700;color:#fff}
+    .jwst-badge{left:10px;background:#ff6b00}
+    .web-badge{right:10px;background:#ff00aa}
+    .planet-info{padding:.9rem;text-align:center;flex-shrink:0}
+    .planet-name{font-size:1.05rem;font-weight:800;color:var(--primary);margin-bottom:.3rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .planet-detail{font-size:.78rem;color:#cbd6e7;margin:.25rem 0;display:flex;align-items:center;justify-content:center;gap:8px}
+    .hab-badge{background:#0f9;color:#000;padding:4px 8px;border-radius:8px;font-size:.7rem;font-weight:800;margin-left:6px}
 
-    .planet-grid{max-width:1400px;margin:2rem auto;padding:0 5%;display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;}
-    .planet-card{background:rgba(10,10,40,.7);border-radius:16px;overflow:hidden;backdrop-filter:blur(10px);border:1px solid rgba(0,212,255,.2);transition:var(--transition);cursor:pointer;position:relative;display:flex;flex-direction:column;height:100%;}
-    .planet-card:hover{transform:scale(1.05);box-shadow:0 20px 40px rgba(0,212,255,.3);border-color:var(--primary);}
-    .planet-img{flex:1;background:#111;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
-    .planet-img img{width:100%;height:100%;object-fit:cover;loading:lazy;}
-    .jwst-badge{position:absolute;top:8px;left:8px;background:#ff6b00;color:#fff;padding:4px 8px;font-size:0.65rem;border-radius:8px;font-weight:700;}
-    .web-badge{position:absolute;top:8px;right:8px;background:#ff00aa;color:#fff;padding:4px 8px;font-size:0.65rem;border-radius:8px;font-weight:700;}
-    .planet-info{padding:1rem;text-align:center;flex-shrink:0;}
-    .planet-name{font-size:1.15rem;font-weight:700;color:var(--primary);margin-bottom:.4rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .planet-detail{font-size:.75rem;color:#ccc;margin:.25rem 0;display:flex;align-items:center;justify-content:center;gap:4px;}
-    .planet-detail i{color:var(--secondary);}
-    .hab-badge{background:#0f9;color:#000;padding:2px 6px;border-radius:6px;font-size:0.65rem;font-weight:700;margin-left:4px;}
+    #star-map{height:520px;border-radius:12px;margin:12px 4%;box-shadow:0 0 40px rgba(0,212,255,.06);position:relative;overflow:hidden;background:linear-gradient(180deg,#000,#020016);cursor:grab}
+    #star-map:active{cursor:grabbing}
+    #star-map canvas{position:absolute;top:0;left:0;width:100%;height:100%}
 
-    section{padding:4rem 5%;min-height:80vh;}
-    #planets,#about,#map-section{background:rgba(0,0,0,.3);border-radius:16px;margin:1.5rem 5%;}
+    .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);justify-content:center;align-items:center;z-index:2000;padding:1rem;overflow-y:auto}
+    .modal.active{display:flex}
+    .modal-content{background:linear-gradient(180deg, rgba(10,10,30,0.98), rgba(6,6,12,0.98));border-radius:12px;max-width:920px;width:100%;padding:1.2rem;position:relative;box-shadow:0 0 60px rgba(0,212,255,.08)}
+    .close-modal{position:absolute;top:10px;right:14px;font-size:1.6rem;color:#fff;cursor:pointer}
+    .modal h2{font-size:1.5rem;color:var(--primary);margin-bottom:.6rem}
+    .modal .modal-img{max-width:100%;height:auto;border-radius:8px;margin:.6rem 0;display:block}
 
-    #about h2{font-family:'Orbitron',sans-serif;font-size:2.5rem;color:var(--primary);margin-bottom:1rem;}
-    #about p{font-size:1.1rem;max-width:900px;line-height:1.8;margin-bottom:.8rem;}
+    footer{text-align:center;padding:1.6rem;color:#7f8da8;font-size:.85rem}
+    footer a{color:var(--primary);text-decoration:none}
 
-    #star-map{height:600px;border-radius:16px;margin:2rem 5%;box-shadow:0 0 30px rgba(0,212,255,.2);position:relative;overflow:hidden;background:#000;}
-    canvas{position:absolute;top:0;left:0;width:100%;height:100%;}
-
-    .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.9);justify-content:center;align-items:center;z-index:2000;padding:1rem;overflow-y:auto;}
-    .modal.active{display:flex;}
-    .modal-content{background:rgba(10,10,40,.95);border-radius:16px;max-width:900px;width:100%;padding:1.8rem;position:relative;box-shadow:0 0 40px rgba(0,212,255,.4);}
-    .close-modal{position:absolute;top:.8rem;right:1.2rem;font-size:1.8rem;color:#fff;cursor:pointer;transition:var(--transition);}
-    .close-modal:hover{color:var(--primary);}
-    .modal h2{font-size:2.2rem;color:var(--primary);margin-bottom:.8rem;}
-    .modal .modal-img{max-width:100%;height:auto;border-radius:10px;margin:1rem auto;display:block;}
-
-    footer{text-align:center;padding:2rem;color:#666;font-size:.85rem;}
-    footer a{color:var(--primary);text-decoration:none;}
-
-    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}
-
-    @media (max-width: 1200px){.planet-grid{grid-template-columns:repeat(3,1fr);}}
-    @media (max-width: 900px){.planet-grid{grid-template-columns:repeat(2,1fr);}}
-    @media (max-width: 600px){.planet-grid{grid-template-columns:1fr;}}
+    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-18px)}}
+    @keyframes pan{to{background-position:100% center}}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.7}}
+    @media (max-width:900px){.hero h1{font-size:2.6rem}}
   </style>
 </head>
 <body>
@@ -93,70 +85,64 @@
   <div class="bg"></div>
   <div class="overlay"></div>
 
-  <!-- Header -->
   <header>
-    <div class="logo">EXOPLANET ATLAS</div>
-    <div class="time" id="bd-time">BD Time</div>
-    <nav>
-      <a href="#home" onclick="scrollToSection('home')">Home</a>
-      <a href="#planets" onclick="scrollToSection('planets')">Planets</a>
-      <a href="#map-section" onclick="scrollToSection('map-section')">Sky Map</a>
-      <a href="#about" onclick="scrollToSection('about')">About</a>
-    </nav>
+    <div style="display:flex;gap:12px;align-items:center">
+      <div class="logo">EXOPLANET ATLAS</div>
+      <div style="font-size:.8rem;color:#9fb6d8;opacity:.9">Humba Galaxy</div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:18px">
+      <nav>
+        <a href="#home">Home</a>
+        <a href="#planets">Planets</a>
+        <a href="#map-section">Sky Map</a>
+        <a href="#about">About</a>
+      </nav>
+      <div class="time" id="bd-time">BD Time</div>
+    </div>
   </header>
 
-  <!-- Hero -->
   <section class="hero" id="home">
     <h1>Exploring the Cosmos: Journey Through Planets and Beyond</h1>
-    <p>Live JWST images • 6,000+ exoplanets • Real-time discovery</p>
-    <button class="btn" onclick="scrollToSection('planets')">BEGIN JOURNEY</button>
+    <p>Live JWST highlights • 6,000+ exoplanets (cached) • Interactive star map with pan & zoom</p>
+    <div style="display:flex;gap:.8rem;align-items:center">
+      <button class="btn" onclick="document.getElementById('planets').scrollIntoView({behavior:'smooth'})">BEGIN JOURNEY</button>
+      <button class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.06)" onclick="toggleTheme()">Toggle Theme</button>
+    </div>
 
-    <div class="stats">
+    <div class="stats" style="margin-top:1.6rem">
       <div class="stat"><h3 id="total-planets">0</h3><p>Exoplanets</p></div>
       <div class="stat"><h3 id="habitable">0</h3><p>Habitable</p></div>
       <div class="stat"><h3 id="jwst">0</h3><p>JWST</p></div>
     </div>
   </section>
 
-  <!-- Controls -->
   <div class="controls">
-    <input type="text" class="search-box" placeholder="Search planet, star, JWST..." id="search"/>
-    <select id="filter-method">
-      <option value="">All Methods</option>
-      <option>Transit</option>
-      <option>Radial Velocity</option>
-      <option>Imaging</option>
-      <option>Microlensing</option>
-    </select>
-    <select id="filter-source">
-      <option value="">All Sources</option>
-      <option value="jwst">JWST Only</option>
-      <option value="web">Community</option>
-    </select>
-    <button class="export-btn" onclick="exportPDF()">Export PDF</button>
+    <input type="text" class="search-box" placeholder="Search planet, star, JWST..." id="search" autocomplete="off"/>
+    <select id="filter-method"><option value="">All Methods</option><option>Transit</option><option>Radial Velocity</option><option>Imaging</option><option>Microlensing</option></select>
+    <select id="filter-source"><option value="">All Sources</option><option value="jwst">JWST Only</option><option value="web">Community</option></select>
+    <button class="export-btn" id="export-btn">Export PDF</button>
+    <input type="file" id="upload-img" accept="image/*" style="display:none" />
+    <button class="load-btn" id="add-custom">ADD IMAGE</button>
   </div>
 
-  <!-- Planets Grid -->
   <section id="planets">
     <div class="planet-grid" id="planet-container"></div>
-    <div style="text-align:center;margin:2rem;">
-      <button class="load-btn" id="load-more" onclick="loadMore()">LOAD MORE PLANETS</button>
+    <div style="text-align:center;margin:1.8rem;">
+      <button class="load-btn" id="load-more">LOAD MORE PLANETS</button>
     </div>
   </section>
 
-  <!-- Sky Map -->
   <section id="map-section">
     <div id="star-map"></div>
   </section>
 
-  <!-- About -->
-  <section id="about">
-    <h2>Journey Beyond</h2>
-    <p>Powered by James Webb Space Telescope's 2025 discoveries, NASA data, and community uploads.</p>
-    <p>Time: <span id="bd-time2">BD Time</span></p>
+  <section id="about" style="padding:1.2rem 4%">
+    <h2 style="font-family:'Orbitron',sans-serif;font-size:1.6rem;color:var(--primary);margin-bottom:.6rem">Journey Beyond</h2>
+    <p style="color:#c8d6ea">Powered by James Webb Space Telescope highlights, NASA Exoplanet Archive (TAP), and community uploads. Data cached locally for fast browsing.</p>
+    <p style="color:#c8d6ea">Time: <span id="bd-time2">BD Time</span></p>
   </section>
 
-  <!-- Modal -->
   <div class="modal" id="planet-modal">
     <div class="modal-content">
       <span class="close-modal" onclick="closeModal()">X</span>
@@ -166,171 +152,374 @@
       <p><strong>Year:</strong> <span id="modal-year"></span></p>
       <p><strong>Method:</strong> <span id="modal-method"></span></p>
       <p><strong>Distance:</strong> <span id="modal-dist"></span> ly</p>
+      <div id="modal-extra"></div>
     </div>
   </div>
 
-  <!-- Footer -->
   <footer>
     <p>© 2025 ExoPlanet Atlas | <a href="https://webbtelescope.org" target="_blank">JWST</a> + <a href="https://exoplanetarchive.ipac.caltech.edu" target="_blank">NASA</a></p>
   </footer>
 
   <script>
-    // Bangladesh Time (GMT+6)
-    function updateBDTime() {
+    /* ----------------- Time (BD +06) ----------------- */
+    function updateBDTime(){
       const now = new Date();
-      const bdTime = now.toLocaleString("en-US", {timeZone: "Asia/Dhaka"});
-      const time = new Date(bdTime).toLocaleTimeString('en-GB');
-      const date = new Date(bdTime).toLocaleDateString('en-GB');
+      const bd = now.toLocaleString('en-US',{timeZone:'Asia/Dhaka'});
+      const d = new Date(bd);
+      const date = d.toLocaleDateString('en-GB');
+      const time = d.toLocaleTimeString('en-GB');
       document.getElementById('bd-time').textContent = `${date} ${time}`;
-      document.getElementById('bd-time2').textContent = `${date} ${time}`;
+      const el2 = document.getElementById('bd-time2');
+      if(el2) el2.textContent = `${date} ${time}`;
     }
-    setInterval(updateBDTime, 1000);
-    updateBDTime();
+    setInterval(updateBDTime,1000); updateBDTime();
 
+    /* ----------------- Data ----------------- */
     let allPlanets = [];
     let displayed = 0;
     const PER_PAGE = 24;
 
-    // JWST 2025 Planets with REAL images
     const jwstPlanets = [
-      {pl_name:"WASP-96b",hostname:"WASP-96",disc_year:2025,discoverymethod:"Transit",pl_rade:12.1,pl_masse:140,pl_eqt:1300,st_dist:1150,pl_habitable:0,isJWST:true,jwstImg:"https://stsci-opo.org/STScI-01J0W0W0W0W0W0W0W0W0W0W0W0.jpg"},
-      {pl_name:"LHS 475 b",hostname:"LHS 475",disc_year:2025,discoverymethod:"Transit",pl_rade:0.99,pl_masse:0.9,pl_eqt:600,st_dist:41,pl_habitable:1,isJWST:true,jwstImg:"https://stsci-opo.org/STScI-01G7JQD9K9VJ0A2V0J7K7K7K7K.jpg"},
-      {pl_name:"TOI-421 b",hostname:"TOI-421",disc_year:2025,discoverymethod:"Transit",pl_rade:2.7,pl_masse:16,pl_eqt:1100,st_dist:250,pl_habitable:0,isJWST:true,jwstImg:"https://stsci-opo.org/STScI-01J1A1A1A1A1A1A1A1A1A1A1A1.jpg"},
+      {pl_name:"WASP-96b",hostname:"WASP-96",disc_year:2025,discoverymethod:"Transit",pl_rade:12.1,pl_masse:140,st_dist:1150,pl_habitable:0,isJWST:true,jwstImg:"https://stsci-opo.org/STScI-01G7JQD9K9VJ0A2V0J7K7K7K7K.jpg"},
+      {pl_name:"LHS 475 b",hostname:"LHS 475",disc_year:2025,discoverymethod:"Transit",pl_rade:0.99,pl_masse:0.9,st_dist:41,pl_habitable:1,isJWST:true,jwstImg:"https://stsci-opo.org/STScI-01G7JQD9K9VJ0A2V0J7K7K7K7K.jpg"},
+      {pl_name:"TOI-421 b",hostname:"TOI-421",disc_year:2025,discoverymethod:"Transit",pl_rade:2.7,pl_masse:16,st_dist:250,pl_habitable:0,isJWST:true,jwstImg:"https://stsci-opo.org/STScI-01J1A1A1A1A1A1A1A1A1A1A1A1.jpg"}
     ];
 
-    async function loadPlanets() {
-      const custom = JSON.parse(localStorage.getItem('customPlanets') || '[]').map(p => ({...p, isWeb: true}));
-      try {
-        const res = await fetch('https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+pl_name,hostname,disc_year,discoverymethod,pl_rade,pl_masse,pl_eqt,st_dist,pl_habitable,ra,dec&format=json');
-        const nasa = await res.json();
-        allPlanets = [...jwstPlanets, ...custom, ...nasa];
-      } catch {
-        allPlanets = [...jwstPlanets, ...custom];
+    /* ----------------- Caching ----------------- */
+    function cacheSet(key, value, ttlSec = 3600){
+      const payload = {ts: Date.now(), ttl: ttlSec, value};
+      localStorage.setItem(key, JSON.stringify(payload));
+    }
+    function cacheGet(key){
+      try{
+        const raw = localStorage.getItem(key);
+        if(!raw) return null;
+        const obj = JSON.parse(raw);
+        if(Date.now() - obj.ts > obj.ttl*1000){ localStorage.removeItem(key); return null; }
+        return obj.value;
+      }catch(e){ return null; }
+    }
+
+    async function fetchNasa(){
+      const cached = cacheGet('nasa_planets_v1');
+      if(cached) return cached;
+      try{
+        const q = encodeURIComponent("select pl_name,hostname,disc_year,discoverymethod,pl_rade,pl_masse,pl_eqt,st_dist,pl_habitable,ra,dec from ps");
+        const url = `https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=${q}&format=json`;
+        const res = await fetch(url);
+        if(!res.ok) throw new Error('NASA fetch failed');
+        const data = await res.json();
+        cacheSet('nasa_planets_v1', data, 60*60*4);
+        return data;
+      }catch(err){
+        console.warn('NASA fetch failed:', err);
+        return [];
       }
+    }
+
+    /* ----------------- Load & Render ----------------- */
+    async function loadPlanets(){
+      const custom = (JSON.parse(localStorage.getItem('customPlanets')||'[]')||[]).map(p => ({...p, isWeb:true}));
+      const nasa = await fetchNasa();
+      allPlanets = [...jwstPlanets, ...custom, ...nasa].map(p => ({
+        pl_name: p.pl_name || 'Unknown',
+        hostname: p.hostname || '—',
+        disc_year: p.disc_year || '—',
+        discoverymethod: p.discoverymethod || '—',
+        pl_rade: p.pl_rade != null ? Number(p.pl_rade) : null,
+        pl_masse: p.pl_masse != null ? Number(p.pl_masse) : null,
+        pl_eqt: p.pl_eqt || null,
+        st_dist: p.st_dist != null ? Number(p.st_dist) : null,
+        pl_habitable: Number(p.pl_habitable || 0),
+        isJWST: Boolean(p.isJWST),
+        isWeb: Boolean(p.isWeb),
+        jwstImg: p.jwstImg || null,
+        customImg: p.customImg || null,
+        ra: p.ra != null ? Number(p.ra) : null,
+        dec: p.dec != null ? Number(p.dec) : null
+      }));
       displayed = 0;
+      document.getElementById('planet-container').innerHTML = '';
       displayPlanets();
       updateStats();
       initStarMap();
     }
 
-    function displayPlanets() {
-      const container = document.getElementById('planet-container');
-      const planets = allPlanets.slice(displayed, displayed + PER_PAGE);
-      const html = planets.map(p => {
-        const img = p.jwstImg ? `<img src="${p.jwstImg}" loading="lazy" alt="${p.pl_name}">` :
-                    p.isWeb ? `<div style="background:#222;height:100%;display:flex;align-items:center;justify-content:center;color:#ff00aa;font-size:2rem;">WEB</div>` :
-                    `<i class="fas ${p.pl_habitable?'fa-globe':'fa-circle'}"></i>`;
-        return `
-          <div class="planet-card" onclick='openModal(${JSON.stringify(p).replace(/'/g, "\\'")})'>
-            <div class="planet-img">
-              ${img}
-              ${p.isJWST ? '<div class="jwst-badge">JWST</div>' : ''}
-              ${p.isWeb ? '<div class="web-badge">WEB</div>' : ''}
-            </div>
-            <div class="planet-info">
-              <div class="planet-name">${p.pl_name}</div>
-              <div class="planet-detail"><i class="fas fa-star"></i> ${p.hostname || '—'}</div>
-              <div class="planet-detail"><i class="fas fa-ruler"></i> ${p.pl_rade?.toFixed(1)||'—'} R</div>
-              <div class="planet-detail"><i class="fas fa-weight"></i> ${p.pl_masse?.toFixed(1)||'—'} M</div>
-              ${p.pl_habitable ? '<span class="hab-badge">HABITABLE</span>' : ''}
-            </div>
-          </div>`;
-      }).join('');
-      container.innerHTML += html;
-      displayed += planets.length;
-      document.getElementById('load-more').style.display = displayed < allPlanets.length ? 'block' : 'none';
+    function makeCard(p, idx){
+      const wrapper = document.createElement('div');
+      wrapper.className = 'planet-card';
+      wrapper.dataset.idx = idx;
+      const imgSrc = p.jwstImg || p.customImg;
+      const imgHTML = imgSrc ? `<img src="${imgSrc}" alt="${p.pl_name}" loading="lazy">` :
+                      (p.isWeb ? `<div style="color:#ff00aa;font-size:1.4rem">WEB</div>` :
+                      `<div style="color:#9fb6d8;font-size:1.4rem"><i class="fas fa-circle"></i></div>`);
+      wrapper.innerHTML = `
+        <div class="planet-img">
+          ${imgHTML}
+          ${p.isJWST?'<div class="jwst-badge">JWST</div>':''}
+          ${p.isWeb?'<div class="web-badge">WEB</div>':''}
+        </div>
+        <div class="planet-info">
+          <div class="planet-name">${p.pl_name}</div>
+          <div class="planet-detail"><i class="fas fa-star"></i> ${p.hostname}</div>
+          <div class="planet-detail"><i class="fas fa-ruler"></i> ${p.pl_rade ? p.pl_rade.toFixed(1)+' R' : '—'}</div>
+          <div class="planet-detail"><i class="fas fa-weight"></i> ${p.pl_masse ? p.pl_masse.toFixed(1)+' M' : '—'}</div>
+          ${p.pl_habitable ? '<div class="hab-badge">HABITABLE</div>' : ''}
+        </div>
+      `;
+      wrapper.addEventListener('click', ()=> openModal(p));
+      return wrapper;
     }
 
-    function loadMore() { displayPlanets(); }
+    function displayPlanets(){
+      const container = document.getElementById('planet-container');
+      const slice = allPlanets.slice(displayed, displayed + PER_PAGE);
+      slice.forEach((p, i) => {
+        const node = makeCard(p, displayed + i);
+        container.appendChild(node);
+        setTimeout(()=> node.classList.add('visible'), 60 * (i+1));
+      });
+      displayed += slice.length;
+      document.getElementById('load-more').style.display = displayed < allPlanets.length ? 'inline-block' : 'none';
+    }
 
-    function updateStats() {
+    document.getElementById('load-more').addEventListener('click', displayPlanets);
+
+    function updateStats(){
       const total = allPlanets.length;
       const hab = allPlanets.filter(p => p.pl_habitable).length;
       const jwst = allPlanets.filter(p => p.isJWST).length;
-      document.getElementById('total-planets').textContent = total + '+';
-      document.getElementById('habitable').textContent = hab + '+';
+      document.getElementById('total-planets').textContent = total>999 ? (Math.round(total/100)/10)+'k+' : total+'+';
+      document.getElementById('habitable').textContent = hab+'+';
       document.getElementById('jwst').textContent = jwst;
     }
 
-    function filterPlanets() {
-      const q = document.getElementById('search').value.toLowerCase();
+    /* ----------------- Search & Filter ----------------- */
+    let filterTimeout = null;
+    document.getElementById('search').addEventListener('input', ()=> { clearTimeout(filterTimeout); filterTimeout = setTimeout(filterPlanets, 220); });
+    document.getElementById('filter-method').addEventListener('change', filterPlanets);
+    document.getElementById('filter-source').addEventListener('change', filterPlanets);
+
+    function filterPlanets(){
+      const q = document.getElementById('search').value.trim().toLowerCase();
       const method = document.getElementById('filter-method').value;
       const source = document.getElementById('filter-source').value;
-
-      const filtered = allPlanets.filter(p => {
-        const matchesSearch = !q || p.pl_name.toLowerCase().includes(q) || (p.hostname && p.hostname.toLowerCase().includes(q));
-        const matchesMethod = !method || p.discoverymethod === method;
-        const matchesSource = !source || (source === 'jwst' && p.isJWST) || (source === 'web' && p.isWeb);
+      const base = [...jwstPlanets].concat(JSON.parse(localStorage.getItem('customPlanets')||'[]')).concat(cacheGet('nasa_planets_v1')||[]);
+      const filtered = base.filter(p=>{
+        const name = (p.pl_name||'').toString().toLowerCase();
+        const host = (p.hostname||'').toString().toLowerCase();
+        const matchesSearch = !q || name.includes(q) || host.includes(q);
+        const matchesMethod = !method || (p.discoverymethod === method);
+        const matchesSource = !source || (source==='jwst' && p.isJWST) || (source==='web' && p.isWeb);
         return matchesSearch && matchesMethod && matchesSource;
-      });
-
-      document.getElementById('planet-container').innerHTML = '';
-      displayed = 0;
+      }).map(p => ({
+        pl_name: p.pl_name, hostname: p.hostname, disc_year: p.disc_year, discoverymethod: p.discoverymethod,
+        pl_rade: p.pl_rade, pl_masse: p.pl_masse, pl_eqt: p.pl_eqt, st_dist: p.st_dist, pl_habitable: p.pl_habitable,
+        isJWST: p.isJWST, isWeb: p.isWeb, jwstImg: p.jwstImg, customImg: p.customImg, ra: p.ra, dec: p.dec
+      }));
       allPlanets = filtered;
+      displayed = 0;
+      document.getElementById('planet-container').innerHTML = '';
       displayPlanets();
       updateStats();
+      initStarMap();
     }
 
-    function openModal(p) {
+    /* ----------------- Modal ----------------- */
+    function openModal(p){
       document.getElementById('modal-name').textContent = p.pl_name;
       document.getElementById('modal-host').textContent = p.hostname || '—';
       document.getElementById('modal-year').textContent = p.disc_year || '—';
       document.getElementById('modal-method').textContent = p.discoverymethod || '—';
-      document.getElementById('modal-dist').textContent = p.st_dist ? p.st_dist.toFixed(0) + ' ly' : '—';
+      document.getElementById('modal-dist').textContent = p.st_dist ? p.st_dist.toFixed(0) : '—';
       const img = document.getElementById('modal-img');
-      img.src = p.jwstImg || '';
-      img.style.display = img.src ? 'block' : 'none';
+      const imgSrc = p.jwstImg || p.customImg;
+      if(imgSrc){
+        img.src = imgSrc;
+        img.style.display = 'block';
+      } else {
+        img.style.display = 'none';
+        img.src = '';
+      }
+      const extra = document.getElementById('modal-extra');
+      extra.innerHTML = `
+        <p><strong>Radius:</strong> ${p.pl_rade ? p.pl_rade.toFixed(2) + ' R⊕' : '—'}</p>
+        <p><strong>Mass:</strong> ${p.pl_masse ? p.pl_masse.toFixed(2) + ' M⊕' : '—'}</p>
+        <p><strong>Temperature:</strong> ${p.pl_eqt ? p.pl_eqt + ' K' : '—'}</p>
+        `;
       document.getElementById('planet-modal').classList.add('active');
     }
 
-    function closeModal() {
+    function closeModal(){
       document.getElementById('planet-modal').classList.remove('active');
     }
 
-    function exportPDF() {
+    /* ----------------- Image Upload ----------------- */
+    document.getElementById('add-custom').addEventListener('click', () => {
+      document.getElementById('upload-img').click();
+    });
+
+    document.getElementById('upload-img').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(ev) {
+        const imgData = ev.target.result;
+        const name = prompt("Planet Name?", "Custom Planet");
+        if (!name) return;
+        const newPlanet = {
+          pl_name: name,
+          hostname: "Custom Star",
+          disc_year: 2025,
+          discoverymethod: "Community",
+          pl_rade: Math.random() * 10 + 0.5,
+          pl_masse: Math.random() * 1000,
+          st_dist: Math.random() * 5000,
+          pl_habitable: Math.random() > 0.7 ? 1 : 0,
+          isWeb: true,
+          customImg: imgData
+        };
+        const custom = JSON.parse(localStorage.getItem('customPlanets') || '[]');
+        custom.push(newPlanet);
+        localStorage.setItem('customPlanets', JSON.stringify(custom));
+        loadPlanets();
+      };
+      reader.readAsDataURL(file);
+    });
+
+    /* ----------------- PDF Export ----------------- */
+    document.getElementById('export-btn').addEventListener('click', async () => {
       const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-      doc.text('ExoPlanet Atlas - Journey Through Planets', 105, 15, { align: 'center' });
+      const doc = new jsPDF('p', 'mm', 'a4');
+      doc.setFont('helvetica');
+      doc.setFontSize(16);
+      doc.text('ExoPlanet Atlas - Journey Through Planets', 105, 20, { align: 'center' });
+
       let y = 30;
-      document.querySelectorAll('.planet-card').forEach((c, i) => {
-        if (y > 280) { doc.addPage(); y = 20; }
-        const name = c.querySelector('.planet-name').textContent;
-        doc.text(`${i+1}. ${name}`, 15, y);
-        y += 8;
-      });
-      doc.save('cosmos-journey.pdf');
-    }
+      for (let i = 0; i < Math.min(displayed, 50); i++) {
+        const card = document.querySelectorAll('.planet-card')[i];
+        if (!card) continue;
+        const canvas = await html2canvas(card, { scale: 1.5 });
+        const imgData = canvas.toDataURL('image/png');
+        if (y > 260) { doc.addPage(); y = 20; }
+        doc.addImage(imgData, 'PNG', 15, y, 50, 50);
+        doc.setFontSize(10);
+        doc.text(card.querySelector('.planet-name').textContent, 70, y + 10);
+        y += 60;
+      }
+      doc.save('exoplanet-atlas.pdf');
+    });
+
+    /* ----------------- STAR MAP (Pan/Zoom/Click) ----------------- */
+    let mapCanvas, mapCtx, mapOffsetX = 0, mapOffsetY = 0, mapScale = 1, isDragging = false, dragStartX, dragStartY;
+    let stars = [];
 
     function initStarMap() {
-      const canvas = document.createElement('canvas');
-      document.getElementById('star-map').appendChild(canvas);
-      const ctx = canvas.getContext('2d');
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
+      const container = document.getElementById('star-map');
+      mapCanvas = document.createElement('canvas');
+      container.appendChild(mapCanvas);
+      mapCtx = mapCanvas.getContext('2d');
 
-      const stars = allPlanets.filter(p => p.ra).map(p => ({
-        x: (p.ra / 360) * canvas.width,
-        y: ((90 - p.dec) / 180) * canvas.height,
-        size: p.isJWST ? 7 : (p.pl_rade ? p.pl_rade * 0.4 : 2),
-        color: p.isJWST ? '#ff6b00' : (p.pl_habitable ? '#0f9' : '#00d4ff')
-      }));
-
-      function draw() {
-        ctx.fillStyle = '#000'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-        stars.forEach(s => { ctx.beginPath(); ctx.arc(s.x, s.y, s.size, 0, Math.PI*2); ctx.fillStyle = s.color; ctx.fill(); });
+      function resize() {
+        mapCanvas.width = container.offsetWidth;
+        mapCanvas.height = container.offsetHeight;
+        drawStars();
       }
-      draw();
-      window.addEventListener('resize', () => { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; draw(); });
+      resize();
+      window.addEventListener('resize', resize);
+
+      stars = allPlanets.filter(p => p.ra != null && p.dec != null).map(p => {
+        const x = ((p.ra / 360) * mapCanvas.width) + mapOffsetX;
+        const y = (((90 - p.dec) / 180) * mapCanvas.height) + mapOffsetY;
+        return {
+          x, y,
+          size: p.isJWST ? 7 : (p.pl_rade ? Math.max(2, p.pl_rade * 0.3) : 2),
+          color: p.isJWST ? '#ff6b00' : (p.pl_habitable ? '#0f9' : '#00d4ff'),
+          pulse: p.isJWST || p.pl_habitable,
+          planet: p
+        };
+      });
+
+      mapCanvas.addEventListener('mousedown', e => {
+        isDragging = true;
+        dragStartX = e.clientX - mapOffsetX;
+        dragStartY = e.clientY - mapOffsetY;
+      });
+      mapCanvas.addEventListener('mousemove', e => {
+        if (isDragging) {
+          mapOffsetX = e.clientX - dragStartX;
+          mapOffsetY = e.clientY - dragStartY;
+          updateStarPositions();
+          drawStars();
+        }
+      });
+      mapCanvas.addEventListener('mouseup', () => isDragging = false);
+      mapCanvas.addEventListener('mouseleave', () => isDragging = false);
+
+      mapCanvas.addEventListener('wheel', e => {
+        e.preventDefault();
+        const zoom = e.deltaY > 0 ? 0.9 : 1.1;
+        mapScale *= zoom;
+        mapScale = Math.max(0.5, Math.min(mapScale, 5));
+        updateStarPositions();
+        drawStars();
+      });
+
+      mapCanvas.addEventListener('click', e => {
+        const rect = mapCanvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const clicked = stars.find(s => Math.hypot(s.x - x, s.y - y) < s.size * mapScale + 5);
+        if (clicked) openModal(clicked.planet);
+      });
+
+      drawStars();
+      setInterval(drawStars, 50);
     }
 
-    // Events
-    document.getElementById('search').addEventListener('input', filterPlanets);
-    document.getElementById('filter-method').addEventListener('change', filterPlanets);
-    document.getElementById('filter-source').addEventListener('change', filterPlanets);
-    window.addEventListener('click', e => { if (e.target === document.getElementById('planet-modal')) closeModal(); });
+    function updateStarPositions() {
+      stars.forEach(s => {
+        s.x = ((s.planet.ra / 360) * mapCanvas.width * mapScale) + mapOffsetX;
+        s.y = (((90 - s.planet.dec) / 180) * mapCanvas.height * mapScale) + mapOffsetY;
+      });
+    }
 
-    // Init
-    window.onload = loadPlanets;
+    function drawStars() {
+      mapCtx.fillStyle = '#000';
+      mapCtx.fillRect(0, 0, mapCanvas.width, mapCanvas.height);
+
+      stars.forEach(s => {
+        const pulse = s.pulse ? (0.7 + 0.3 * Math.sin(Date.now() * 0.005)) : 1;
+        mapCtx.globalAlpha = pulse;
+        mapCtx.beginPath();
+        mapCtx.arc(s.x, s.y, s.size * mapScale, 0, Math.PI * 2);
+        mapCtx.fillStyle = s.color;
+        mapCtx.fill();
+        mapCtx.globalAlpha = 1;
+      });
+    }
+
+    /* ----------------- Theme Toggle ----------------- */
+    function toggleTheme() {
+      document.body.classList.toggle('light');
+      if (document.body.classList.contains('light')) {
+        document.documentElement.style.setProperty('--dark', '#f8f9fa');
+        document.documentElement.style.setProperty('--light', '#212529');
+      } else {
+        document.documentElement.style.removeProperty('--dark');
+        document.documentElement.style.removeProperty('--light');
+      }
+    }
+
+    /* ----------------- Init ----------------- */
+    window.onload = () => {
+      loadPlanets();
+      document.addEventListener('click', e => {
+        if (e.target === document.getElementById('planet-modal')) closeModal();
+      });
+    };
   </script>
 </body>
 </html>
+
+         
