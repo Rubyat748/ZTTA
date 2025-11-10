@@ -19,67 +19,80 @@
     .bg{position:fixed;top:0;left:0;width:100%;height:100%;background:url('assets/background.png') center/cover no-repeat;z-index:-2;filter:brightness(.7);}
     .overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,rgba(0,0,50,.8),rgba(10,0,30,.9));z-index:-1;}
 
-    header{position:fixed;top:0;left:0;right:0;padding:1.5rem 5%;display:flex;justify-content:space-between;align-items:center;z-index:1000;backdrop-filter:blur(10px);background:rgba(0,0,0,.3);border-bottom:1px solid rgba(0,212,255,.2);}
-    .logo{font-family:'Orbitron',sans-serif;font-size:2.2rem;font-weight:900;background:linear-gradient(90deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:2px;}
-    nav a{color:#fff;margin:0 1.2rem;font-weight:600;text-decoration:none;font-size:1.1rem;transition:var(--transition);position:relative;}
+    header{position:fixed;top:0;left:0;right:0;padding:1rem 5%;display:flex;justify-content:space-between;align-items:center;z-index:1000;backdrop-filter:blur(10px);background:rgba(0,0,0,.3);border-bottom:1px solid rgba(0,212,255,.2);}
+    .logo{font-family:'Orbitron',sans-serif;font-size:1.8rem;font-weight:900;background:linear-gradient(90deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:1.5px;}
+    nav a{color:#fff;margin:0 .8rem;font-weight:600;text-decoration:none;font-size:1rem;transition:var(--transition);position:relative;}
     nav a::after{content:'';position:absolute;width:0;height:2px;bottom:-6px;left:0;background:var(--primary);transition:width .3s;}
     nav a:hover::after{width:100%;}nav a:hover{color:var(--primary);text-shadow:var(--glow);}
 
     .hero{height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:0 5%;position:relative;}
-    .hero h1{font-family:'Orbitron',sans-serif;font-size:6rem;font-weight:900;background:linear-gradient(120deg,#00d4ff,#ff00aa,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 0 40px rgba(0,212,255,.5);margin-bottom:1.5rem;animation:float 6s ease-in-out infinite;}
-    .hero p{font-size:1.6rem;max-width:800px;margin:1.5rem 0 3rem;color:#ccc;}
-    .btn{padding:1rem 3rem;font-size:1.3rem;font-weight:700;color:#fff;background:linear-gradient(45deg,var(--primary),var(--secondary));border:none;border-radius:50px;cursor:pointer;box-shadow:var(--glow);transition:var(--transition);animation:pulse 2s infinite;}
+    .hero h1{font-family:'Orbitron',sans-serif;font-size:4.5rem;font-weight:900;background:linear-gradient(120deg,#00d4ff,#ff00aa,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 0 40px rgba(0,212,255,.5);margin-bottom:1rem;animation:float 6s ease-in-out infinite;}
+    .hero p{font-size:1.3rem;max-width:800px;margin:1rem 0 2rem;color:#ccc;}
+    .btn{padding:.9rem 2.5rem;font-size:1.2rem;font-weight:700;color:#fff;background:linear-gradient(45deg,var(--primary),var(--secondary));border:none;border-radius:50px;cursor:pointer;box-shadow:var(--glow);transition:var(--transition);animation:pulse 2s infinite;}
     .btn:hover{transform:translateY(-5px);box-shadow:0 0 30px rgba(0,212,255,.8);}
 
-    .stats{display:flex;justify-content:center;gap:4rem;margin:4rem 0;flex-wrap:wrap;}
+    .stats{display:flex;justify-content:center;gap:2.5rem;margin:2.5rem 0;flex-wrap:wrap;}
     .stat{text-align:center;}
-    .stat h3{font-size:3.5rem;font-weight:900;color:var(--primary);text-shadow:var(--glow);}
-    .stat p{font-size:1.2rem;color:#aaa;}
+    .stat h3{font-size:2.8rem;font-weight:900;color:var(--primary);text-shadow:var(--glow);}
+    .stat p{font-size:1rem;color:#aaa;}
 
-    .controls{max-width:1200px;margin:2rem auto;padding:0 5%;display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;}
-    .search-box{padding:1rem 1.5rem;width:350px;border:2px solid rgba(0,212,255,.3);border-radius:50px;background:rgba(0,0,0,.4);color:#fff;font-size:1.1rem;outline:none;transition:var(--transition);}
-    .search-box:focus{border-color:var(--primary);box-shadow:var(--glow);}
-    select{padding:1rem 1.5rem;border:2px solid rgba(0,212,255,.3);border-radius:50px;background:rgba(0,0,0,.4);color:#fff;font-size:1rem;outline:none;}
+    .controls{max-width:1200px;margin:1.5rem auto;padding:0 5%;display:flex;gap:.8rem;flex-wrap:wrap;justify-content:center;}
+    .search-box,.controls select{padding:.8rem 1.2rem;width:100%;max-width:320px;border:2px solid rgba(0,212,255,.3);border-radius:50px;background:rgba(0,0,0,.4);color:#fff;font-size:1rem;outline:none;transition:var(--transition);}
+    .search-box:focus,.controls select:focus{border-color:var(--primary);box-shadow:var(--glow);}
 
-    .planet-grid{max-width:1400px;margin:3rem auto;padding:0 5%;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:2rem;}
-    .planet-card{background:rgba(10,10,40,.7);border-radius:20px;overflow:hidden;backdrop-filter:blur(10px);border:1px solid rgba(0,212,255,.2);transition:var(--transition);cursor:pointer;position:relative;}
-    .planet-card:hover{transform:translateY(-15px) scale(1.03);box-shadow:0 20px 40px rgba(0,212,255,.3);border-color:var(--primary);}
-    .planet-img{height:200px;background:linear-gradient(45deg,#1a1a2e,#16213e);display:flex;align-items:center;justify-content:center;font-size:4rem;color:var(--primary);}
+    .planet-grid{max-width:1400px;margin:2rem auto;padding:0 5%;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.5rem;}
+    .planet-card{background:rgba(10,10,40,.7);border-radius:16px;overflow:hidden;backdrop-filter:blur(10px);border:1px solid rgba(0,212,255,.2);transition:var(--transition);cursor:pointer;position:relative;}
+    .planet-card:hover{transform:translateY(-12px) scale(1.03);box-shadow:0 20px 40px rgba(0,212,255,.3);border-color:var(--primary);}
+    .planet-img{height:180px;background:linear-gradient(45deg,#1a1a2e,#16213e);display:flex;align-items:center;justify-content:center;font-size:3.5rem;color:var(--primary);}
     .planet-img img{width:100%;height:100%;object-fit:cover;}
-    .planet-info{padding:1.5rem;}
-    .planet-name{font-size:1.5rem;font-weight:700;color:var(--primary);margin-bottom:.5rem;}
-    .planet-detail{font-size:.95rem;color:#ccc;margin:.4rem 0;}
-    .planet-detail i{color:var(--secondary);margin-right:.5rem;}
+    .planet-info{padding:1.2rem;}
+    .planet-name{font-size:1.35rem;font-weight:700;color:var(--primary);margin-bottom:.4rem;}
+    .planet-detail{font-size:.9rem;color:#ccc;margin:.3rem 0;}
+    .planet-detail i{color:var(--secondary);margin-right:.4rem;}
 
-    section{padding:6rem 5%;min-height:80vh;}
-    #planets,#about,#map-section{background:rgba(0,0,0,.3);border-radius:20px;margin:2rem 5%;}
+    section{padding:4rem 5%;min-height:80vh;}
+    #planets,#about,#map-section{background:rgba(0,0,0,.3);border-radius:16px;margin:1.5rem 5%;}
 
-    #about h2{font-family:'Orbitron',sans-serif;font-size:3rem;color:var(--primary);margin-bottom:1.5rem;}
-    #about p{font-size:1.2rem;max-width:900px;line-height:1.8;margin-bottom:1rem;}
+    #about h2{font-family:'Orbitron',sans-serif;font-size:2.5rem;color:var(--primary);margin-bottom:1rem;}
+    #about p{font-size:1.1rem;max-width:900px;line-height:1.8;margin-bottom:.8rem;}
 
-    #map{height:600px;border-radius:20px;margin:4rem 5%;box-shadow:0 0 30px rgba(0,212,255,.2);}
+    #map{height:500px;border-radius:16px;margin:2rem 5%;box-shadow:0 0 30px rgba(0,212,255,.2);}
 
-    .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.9);justify-content:center;align-items:center;z-index:2000;padding:2rem;overflow-y:auto;}
+    .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.9);justify-content:center;align-items:center;z-index:2000;padding:1rem;overflow-y:auto;}
     .modal.active{display:flex;}
-    .modal-content{background:rgba(10,10,40,.95);border-radius:20px;max-width:900px;width:100%;padding:2rem;position:relative;box-shadow:0 0 40px rgba(0,212,255,.4);}
-    .close-modal{position:absolute;top:1rem;right:1.5rem;font-size:2rem;color:#fff;cursor:pointer;transition:var(--transition);}
+    .modal-content{background:rgba(10,10,40,.95);border-radius:16px;max-width:900px;width:100%;padding:1.8rem;position:relative;box-shadow:0 0 40px rgba(0,212,255,.4);}
+    .close-modal{position:absolute;top:.8rem;right:1.2rem;font-size:1.8rem;color:#fff;cursor:pointer;transition:var(--transition);}
     .close-modal:hover{color:var(--primary);}
-    .modal h2{font-size:2.5rem;color:var(--primary);margin-bottom:1rem;}
-    .modal p{font-size:1.1rem;line-height:1.8;margin:1rem 0;}
-    .modal .detail-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-top:1.5rem;}
-    .modal .detail-item{background:rgba(0,212,255,.1);padding:1rem;border-radius:12px;}
+    .modal h2{font-size:2.2rem;color:var(--primary);margin-bottom:.8rem;}
+    .modal p{font-size:1rem;line-height:1.7;margin:.8rem 0;}
+    .modal .detail-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.9rem;margin-top:1.2rem;}
+    .modal .detail-item{background:rgba(0,212,255,.1);padding:.9rem;border-radius:10px;}
     .modal .detail-label{font-weight:600;color:var(--secondary);}
     .modal .detail-value{color:#fff;}
-    .modal .modal-img{max-width:300px;height:200px;object-fit:cover;border-radius:10px;margin:1rem auto;display:block;}
+    .modal .modal-img{max-width:100%;height:auto;border-radius:10px;margin:1rem auto;display:block;}
 
-    footer{text-align:center;padding:3rem;color:#666;font-size:.9rem;}
+    footer{text-align:center;padding:2rem;color:#666;font-size:.85rem;}
     footer a{color:var(--primary);text-decoration:none;}
 
     @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}
     @keyframes pulse{0%,100%{box-shadow:0 0 20px rgba(0,212,255,.6)}50%{box-shadow:0 0 35px rgba(0,212,255,.9)}}
 
-    @media(max-width:768px){
-      .hero h1{font-size:3.5rem;}.hero p{font-size:1.2rem;}.stats{gap:2rem;}.stat h3{font-size:2.5rem;}.search-box{width:100%;}
+    /* ---------- Mobile ---------- */
+    @media (max-width: 768px){
+      .hero h1{font-size:3rem;}
+      .hero p{font-size:1.1rem;}
+      .stats{gap:1.5rem;}
+      .stat h3{font-size:2.2rem;}
+      .controls{flex-direction:column;align-items:center;}
+      .search-box,.controls select{max-width:none;}
+      .planet-grid{grid-template-columns:1fr;}
+    }
+    @media (max-width: 480px){
+      header{padding:.8rem 4%;}
+      .logo{font-size:1.5rem;}
+      nav a{font-size:.9rem;margin:0 .4rem;}
+      .hero h1{font-size:2.5rem;}
+      .btn{padding:.7rem 2rem;font-size:1rem;}
     }
   </style>
 </head>
@@ -88,7 +101,7 @@
   <div class="bg"></div>
   <div class="overlay"></div>
 
-  <!-- Header (Admin Link REMOVED) -->
+  <!-- Header -->
   <header>
     <div class="logo">EXOPLANET ATLAS</div>
     <nav>
@@ -96,7 +109,6 @@
       <a href="#planets" onclick="scrollToSection('planets')">Planets</a>
       <a href="#map-section" onclick="scrollToSection('map-section')">Sky Map</a>
       <a href="#about" onclick="scrollToSection('about')">About</a>
-      <!-- ADMIN LINK REMOVED -->
     </nav>
   </header>
 
@@ -125,8 +137,8 @@
     </select>
     <select id="filter-habitable">
       <option value="">All Habitability</option>
-      <option>Habitable Zone</option>
-      <option>Earth-like</option>
+      <option value="hab">Habitable Zone</option>
+      <option value="earth">Earth-like</option>
     </select>
   </div>
 
@@ -174,6 +186,7 @@
   <!-- Scripts -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
+    /* ---------- Utility ---------- */
     function scrollToSection(id) {
       document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
     }
@@ -181,15 +194,15 @@
     const modal = document.getElementById('planet-modal');
     function openModal(planet) {
       document.getElementById('modal-name').textContent = planet.pl_name;
-      document.getElementById('modal-host').textContent = planet.hostname;
+      document.getElementById('modal-host').textContent = planet.hostname || '—';
       document.getElementById('modal-year').textContent = planet.disc_year || 'Unknown';
       document.getElementById('modal-method').textContent = planet.discoverymethod || 'Unknown';
-      document.getElementById('modal-dist').textContent = planet.st_dist ? planet.st_dist.toFixed(1) : 'Unknown';
+      document.getElementById('modal-dist').textContent = planet.st_dist ? planet.st_dist.toFixed(1) : '—';
 
       document.getElementById('modal-radius').textContent = planet.pl_rade ? `${planet.pl_rade.toFixed(2)} Earth radii` : '—';
-      document.getElementById('modal-mass').textContent = planet.pl_masse ? `${planet.pl_masse.toFixed(2)} Earth masses` : '—';
-      document.getElementById('modal-temp').textContent = planet.pl_eqt ? `${planet.pl_eqt} K` : '—';
-      document.getElementById('modal-hab').textContent = planet.pl_habitable ? 'Yes' : 'No';
+      document.getElementById('modal-mass').textContent   = planet.pl_masse ? `${planet.pl_masse.toFixed(2)} Earth masses` : '—';
+      document.getElementById('modal-temp').textContent   = planet.pl_eqt ? `${planet.pl_eqt} K` : '—';
+      document.getElementById('modal-hab').textContent    = planet.pl_habitable ? 'Yes' : 'No';
 
       const img = document.getElementById('modal-img');
       if (planet.customImg) {
@@ -202,12 +215,14 @@
       modal.classList.add('active');
     }
     function closeModal() { modal.classList.remove('active'); }
-    window.onclick = e => { if (e.target === modal) closeModal(); };
+    window.addEventListener('click', e => { if (e.target === modal) closeModal(); });
 
+    /* ---------- Data ---------- */
     let allPlanets = [];
+
     function loadCustomPlanets() {
-      const data = localStorage.getItem('customPlanets');
-      return data ? JSON.parse(data) : [];
+      const raw = localStorage.getItem('customPlanets');
+      return raw ? JSON.parse(raw) : [];
     }
 
     async function loadPlanets() {
@@ -215,7 +230,8 @@
         const res = await fetch('https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+pl_name,hostname,disc_year,discoverymethod,pl_rade,pl_masse,pl_eqt,st_dist,pl_habitable,ra,dec&format=json');
         const nasa = await res.json();
         allPlanets = [...loadCustomPlanets(), ...nasa];
-      } catch {
+      } catch (err) {
+        console.warn('NASA fetch failed, using demo data', err);
         allPlanets = [...loadCustomPlanets(), ...getDemoData()];
       }
       displayPlanets(allPlanets);
@@ -230,63 +246,82 @@
       ];
     }
 
+    /* ---------- Rendering ---------- */
     function displayPlanets(planets) {
       const container = document.getElementById('planet-container');
-      container.innerHTML = planets.slice(0, 50).map(p => `
-        <div class="planet-card" onclick="openModal(${JSON.stringify(p).replace(/"/g, '&quot;')})">
-          <div class="planet-img">${p.customImg ? `<img src="${p.customImg}" alt="${p.pl_name}">` : `<i class="fas ${p.pl_habitable ? 'fa-globe' : 'fa-circle'}"></i>`}</div>
-          <div class="planet-info">
-            <div class="planet-name">${p.pl_name}</div>
-            <div class="planet-detail"><i class="fas fa-star"></i> ${p.hostname}</div>
-            <div class="planet-detail"><i class="fas fa-calendar"></i> ${p.disc_year || 'Unknown'}</div>
-            <div class="planet-detail"><i class="fas fa-satellite"></i> ${p.discoverymethod || 'Unknown'}</div>
-            ${p.pl_habitable ? `<div class="planet-detail" style="color:#0f0"><i class="fas fa-heart"></i> Habitable Zone</div>` : ''}
-          </div>
-        </div>
-      `).join('');
+      const html = planets.slice(0, 150).map(p => {
+        const icon = p.pl_habitable ? 'fa-globe' : 'fa-circle';
+        const imgTag = p.customImg ? `<img src="${p.customImg}" alt="${p.pl_name}">` : `<i class="fas ${icon}"></i>`;
+        return `
+          <div class="planet-card" onclick='openModal(${JSON.stringify(p).replace(/'/g, "\\'")})'>
+            <div class="planet-img">${imgTag}</div>
+            <div class="planet-info">
+              <div class="planet-name">${p.pl_name}</div>
+              <div class="planet-detail"><i class="fas fa-star"></i> ${p.hostname || '—'}</div>
+              <div class="planet-detail"><i class="fas fa-calendar"></i> ${p.disc_year || '—'}</div>
+              <div class="planet-detail"><i class="fas fa-satellite"></i> ${p.discoverymethod || '—'}</div>
+              ${p.pl_habitable ? `<div class="planet-detail" style="color:#0f0"><i class="fas fa-heart"></i> Habitable Zone</div>` : ''}
+            </div>
+          </div>`;
+      }).join('');
+      container.innerHTML = html || '<p style="grid-column:1/-1;text-align:center;color:#aaa;">No planets match your filters.</p>';
     }
 
     function updateStats(p) {
       const total = p.length;
-      const hab = p.filter(x => x.pl_habitable).length;
-      const sys = new Set(p.map(x => x.hostname)).size;
+      const hab   = p.filter(x => x.pl_habitable).length;
+      const sys   = new Set(p.map(x => x.hostname)).size;
       document.getElementById('total-planets').textContent = total + '+';
-      document.getElementById('habitable').textContent = hab + '+';
-      document.getElementById('systems').textContent = sys + '+';
+      document.getElementById('habitable').textContent    = hab + '+';
+      document.getElementById('systems').textContent      = sys + '+';
     }
 
+    /* ---------- Map ---------- */
     function initMap(p) {
       const map = L.map('map').setView([20, 0], 2);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-      p.slice(0, 100).forEach(x => {
-        if (x.ra && x.dec) {
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(map);
+
+      p.slice(0, 200).forEach(x => {
+        if (x.ra != null && x.dec != null) {
+          const radius = x.pl_rade ? Math.max(4, x.pl_rade * 2) : 6;
           L.circleMarker([x.dec, x.ra], {
-            radius: x.pl_rade ? Math.max(4, x.pl_rade * 2) : 6,
+            radius,
             color: x.pl_habitable ? '#0f0' : '#00d4ff',
             fillOpacity: 0.7
-          }).addTo(map).bindPopup(`<b>${x.pl_name}</b><br>${x.hostname}`);
+          }).addTo(map).bindPopup(`<b>${x.pl_name}</b><br>${x.hostname || ''}`);
         }
       });
+    }
+
+    /* ---------- Filters ---------- */
+    function filterPlanets() {
+      const q = document.getElementById('search').value.trim().toLowerCase();
+      const method = document.getElementById('filter-method').value;
+      const hab    = document.getElementById('filter-habitable').value;
+
+      const filtered = allPlanets.filter(p => {
+        const matchesSearch = p.pl_name.toLowerCase().includes(q) ||
+                              (p.hostname && p.hostname.toLowerCase().includes(q));
+        const matchesMethod = !method || p.discoverymethod === method;
+        const matchesHab = !hab ||
+          (hab === 'hab' && p.pl_habitable) ||
+          (hab === 'earth' && p.pl_rade && p.pl_rade <= 1.5);
+        return matchesSearch && matchesMethod && matchesHab;
+      });
+
+      displayPlanets(filtered);
     }
 
     document.getElementById('search').addEventListener('input', filterPlanets);
     document.getElementById('filter-method').addEventListener('change', filterPlanets);
     document.getElementById('filter-habitable').addEventListener('change', filterPlanets);
 
-    function filterPlanets() {
-      const q = document.getElementById('search').value.toLowerCase();
-      const m = document.getElementById('filter-method').value;
-      const h = document.getElementById('filter-habitable').value;
-      const f = allPlanets.filter(p => {
-        const s = p.pl_name.toLowerCase().includes(q) || (p.hostname && p.hostname.toLowerCase().includes(q));
-        const mm = !m || p.discoverymethod === m;
-        const hh = !h || (h === 'Habitable Zone' && p.pl_habitable) || (h === 'Earth-like' && p.pl_rade && p.pl_rade <= 1.5);
-        return s && mm && hh;
-      });
-      displayPlanets(f);
-    }
-
-    window.onload = loadPlanets;
+    /* ---------- Init ---------- */
+    window.onload = () => {
+      loadPlanets();
+    };
   </script>
 </body>
 </html>
